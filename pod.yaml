@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: springboot-microservice-template-build
+spec:
+  containers:
+  - name: kaniko
+    image: gcr.io/kaniko-project/executor:latest
+    args:
+    - "--context=git://github.com/OpenCloudCX/springboot-microservice-template"
+    - "--destination=rivasolutionsinc/springboot-microservice-template-app:1.0"
+    volumeMounts:
+    - name: kaniko-secret
+      mountPath: /kaniko/.docker
+  restartPolicy: Never
+  volumes:
+  - name: kaniko-secret
+    secret:
+      secretName: riva-dockerhub
+      items:
+        - key: .dockerconfigjson
+          path: config.json
